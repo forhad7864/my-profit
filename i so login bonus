@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<title>Create Account & Login with Bonus</title>
+<style>
+  /* Reset & basics */
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+  }
+  .container {
+    background: white;
+    padding: 30px 25px;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 14px 28px rgba(0,0,0,0.25),
+                0 10px 10px rgba(0,0,0,0.22);
+    position: relative;
+  }
+  h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+  form {
+    display: flex;
+    flex-direction: column;
+  }
+  label {
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: #555;
+    font-size: 0.9rem;
+  }
+  input[type="text"],
+  input[type="email"],
+  input[type="password"] {
+    padding: 12px 15px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    border: 1.8px solid #ddd;
+    font-size: 1rem;
+    outline-offset: 0;
+    transition: border-color 0.3s ease;
+  }
+  input[type="text"]:focus,
+  input[type="email"]:focus,
+  input[type="password"]:focus {
+    border-color: #667eea;
+    outline: none;
+  }
+  button {
+    background-color: #667eea;
+    border: none;
+    color: white;
+    padding: 14px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.25s ease;
+    user-select: none;
+    margin-top: 10px;
+  }
+  button:hover,
+  button:focus {
+    background-color: #5a67d8;
+  }
+  .error {
+    color: #e74c3c;
+    font-size: 0.8rem;
+    margin-top: -10px;
+    margin-bottom: 10px;
+    display: none;
+  }
+  .toggle-link {
+    margin-top: 15px;
+    text-align: center;
+    font-size: 0.9rem;
+    color: #666;
+    cursor: pointer;
+    user-select: none;
+  }
+  .toggle-link a {
+    color: #667eea;
+    text-decoration: none;
+    font-weight: 600;
+  }
+  .toggle-link a:hover,
+  .toggle-link a:focus {
+    text-decoration: underline;
+  }
+  /* Bonus notification */
+  .bonus-notification {
+    position: absolute;
+    top: -55px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #28a745;
+    color: white;
+    border-radius: 20px;
+    padding: 10px 25px;
+    font-size: 1rem;
+    font-weight: 700;
+    box-shadow: 0px 4px 10px rgba(40, 167, 69, 0.4);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+  }
+  .bonus-notification.show {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  /* Responsive for smaller screens */
+  @media (max-width: 400px) {
+    .container {
+      padding: 20px 18px;
+      width: 100%;
+    }
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+      font-size: 0.9rem;
+      padding: 10px 12px;
+    }
+    button {
+      font-size: 15px;
+      padding: 12px;
+    }
+    .bonus-notification {
+      top: -65px;
+      padding: 9px 20px;
+      font-size: 0.9rem;
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="container" role="main">
+    <div id="bonusNotification" class="bonus-notification" aria-live="polite" aria-atomic="true">
+      ₹100 bonus upon account creation!
+    </div>
+
+    <h2 id="form-title">Create Account</h2>
+
+    <form id="create-account-form" novalidate>
+      <label for="create-username">Username</label>
+      <input type="text" id="create-username" name="username" placeholder="Your username" required minlength="3" maxlength="20" pattern="^[a-zA-Z0-9_]+$" aria-describedby="create-usernameHelp" aria-required="true" />
+      <small id="create-usernameHelp" class="error">Username must be 3-20 characters, only letters, digits or underscores.</small>
+
+      <label for="create-email">Email Address</label>
+      <input type="email" id="create-email" name="email" placeholder="name@example.com" required aria-describedby="create-emailHelp" aria-required="true" />
+      <small id="create-emailHelp" class="error">Please enter a valid email address.</small>
+
+      <label for="create-password">Password</label>
+      <input type="password" id="create-password" name="password" placeholder="Create a password" required minlength="6" aria-describedby="create-passwordHelp" aria-required="true" />
+      <small id="create-passwordHelp" class="error">Password must be at least 6 characters.</small>
+
+      <label for="create-confirmPassword">Confirm Password</label>
+      <input type="password" id="create-confirmPassword" name="confirmPassword" placeholder="Confirm your password" required aria-describedby="create-confirmPasswordHelp" aria-required="true" />
+      <small id="create-confirmPasswordHelp" class="error">Passwords do not match.</small>
+
+      <button type="submit">Create Account</button>
+    </form>
+
+    <form id="login-form" novalidate style="display:none;">
+      <label for="login-username-email">Username or Email</label>
+      <input type="text" id="login-username-email" name="usernameEmail" placeholder="Username or Email" required aria-describedby="login-usernameEmailHelp" aria-required="true" />
+      <small id="login-usernameEmailHelp" class="error">Please enter your username or email.</small>
+
+      <label for="login-password">Password</label>
+      <input type="password" id="login-password" name="password" placeholder="Enter your password" required aria-describedby="login-passwordHelp" aria-required="true" />
+      <small id="login-passwordHelp" class="error">Please enter your password.</small>
+
+      <button type="submit">Log In</button>
+    </form>
+
+    <div class="toggle-link" aria-live="polite">
+      <span id="toggle-text">Already have an account? </span><a href="#" id="toggle-link">Log In</a>
+    </div>
+  </div>
+
+<script>
+  const createForm = document.getElementById('create-account-form');
+  const loginForm = document.getElementById('login-form');
+  const toggleLink = document.getElementById('toggle-link');
+  const toggleText = document.getElementById('toggle-text');
+  const formTitle = document.getElementById('form-title');
+  const bonusNotification = document.getElementById('bonusNotification');
+
+  // Create Account field references
+  const caUsername = createForm.username;
+  const caEmail = createForm.email;
+  const caPassword = createForm.password;
+  const caConfirmPassword = createForm.confirmPassword;
+
+  // Login field references
+  const liUser = loginForm.usernameEmail;
+  const liPassword = loginForm.password;
+
+  // Show/hide errors
+  function showError(input, show) {
+    const errorEl = input.nextElementSibling;
+    if (show) {
+      errorEl.style.display = 'block';
+      input.setAttribute('aria-invalid', 'true');
+    } else {
+      errorEl.style.display = 'none';
+      input.removeAttribute('aria-invalid');
+    }
+  }
+
+  // Validation for Create Account
+  function validateCAUsername() {
+    const re = /^[a-zA-Z0-9_]{3,20}$/;
+    if (!re.test(caUsername.value.trim())) {
+      showError(caUsername, true);
+      return false;
+    }
+    showError(caUsername, false);
+    return true;
+  }
+
+  function validateCAEmail() {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!re.test(caEmail.value.trim().toLowerCase())) {
+      showError(caEmail, true);
+      return false;
+    }
+    showError(caEmail, false);
+    return true;
+  }
+
+  function validateCAPassword() {
+    if (caPassword.value.length < 6) {
+      showError(caPassword, true);
+      return false;
+    }
+    showError(caPassword, false);
+    return true;
+  }
+
+  function validateCAConfirmPassword() {
+    if (caConfirmPassword.value !== caPassword.value || caConfirmPassword.value === '') {
+      showError(caConfirmPassword, true);
+      return false;
+    }
+    showError(caConfirmPassword, false);
+    return true;
+  }
+
+  // Validation for Login
+  function validateLoginUser() {
+    if (!liUser.value.trim()) {
+      showError(liUser, true);
+      return false;
+    }
+    showError(liUser, false);
+    return true;
+  }
+
+  function validateLoginPassword() {
+    if (!liPassword.value.trim()) {
+      showError(liPassword, true);
+      return false;
+    }
+    showError(liPassword, false);
+    return true;
+  }
+
+  // Show bonus notification for a few seconds
+  function showBonusNotification() {
+    bonusNotification.classList.add('show');
+    setTimeout(() => {
+      bonusNotification.classList.remove('show');
+    }, 4000);
+  }
+
+  // Form submit handlers
+  createForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const validUsername = validateCAUsername();
+    const validEmail = validateCAEmail();
+    const validPassword = validateCAPassword();
+    const validConfirm = validateCAConfirmPassword();
+
+    if (validUsername && validEmail && validPassword && validConfirm) {
+      showBonusNotification();
+      createForm.reset();
+      setTimeout(() => {
+        alert('Account Created Successfully! Please log in.');
+        switchToLogin();
+      }, 500); // delay to show bonus notification briefly before alert + switch
+    } else {
+      if (!validUsername) caUsername.focus();
+      else if (!validEmail) caEmail.focus();
+      else if (!validPassword) caPassword.focus();
+      else if (!validConfirm) caConfirmPassword.focus();
+    }
+  });
+
+  loginForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const validUser = validateLoginUser();
+    const validPassword = validateLoginPassword();
+
+    if (validUser && validPassword) {
+      alert(`Logged in as ${liUser.value.trim()}`);
+      loginForm.reset();
+    } else {
+      if (!validUser) liUser.focus();
+      else if (!validPassword) liPassword.focus();
+    }
+  });
+
+  toggleLink.addEventListener('click', function(e) {
+    e.preventDefault();
+    if (createForm.style.display === 'none') {
+      switchToCreate();
+    } else {
+      switchToLogin();
+    }
+  });
+
+  function switchToLogin() {
+    createForm.style.display = 'none';
+    loginForm.style.display = 'flex';
+    formTitle.textContent = 'Log In';
+    toggleText.textContent = "Don't have an account? ";
+    toggleLink.textContent = "Create Account";
+  }
+
+  function switchToCreate() {
+    createForm.style.display = 'flex';
+    loginForm.style.display = 'none';
+    formTitle.textContent = 'Create Account';
+    toggleText.textContent = 'Already have an account? ';
+    toggleLink.textContent = 'Log In';
+  }
+
+  // Live validation
+  caUsername.addEventListener('input', validateCAUsername);
+  caEmail.addEventListener('input', validateCAEmail);
+  caPassword.addEventListener('input', validateCAPassword);
+  caConfirmPassword.addEventListener('input', validateCAConfirmPassword);
+
+  liUser.addEventListener('input', validateLoginUser);
+  liPassword.addEventListener('input', validateLoginPassword);
+</script>
+</body>
+</html>
